@@ -19,7 +19,7 @@ var Spotify = require('node-spotify-api');
 var params = {
     screen_name: 'eamatt44',
 
-// Set count to 20 to display last 20 tweets    
+    // Set count to 20 to display last 20 tweets    
 
     count: 20
 }
@@ -72,14 +72,17 @@ function movieThis() {
             // language of the movie
             // plot of the movie
             // cast of actors
-            console.log("Title of the movie: " + JSON.parse(body).Title);
-            console.log("Release Year: " + JSON.parse(body).Year);
-            console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-            console.log("Rotten Tomatoes Rating: " + JSON.parse(body).tomatoRating);
-            console.log("Country of Release: " + JSON.parse(body).Country);
-            console.log("Language of the Movie: " + JSON.parse(body).Language);
-            console.log("Movie Plot: " + JSON.parse(body).Plot);
-            console.log("Movie Cast: " + JSON.parse(body).Actors);
+
+            // Store data to add to log.txt file
+
+            getData("Title of the movie: " + JSON.parse(body).Title);
+            getData("Release Year: " + JSON.parse(body).Year);
+            getData("IMDB Rating: " + JSON.parse(body).imdbRating);
+            getData("Rotten Tomatoes Rating: " + JSON.parse(body).tomatoRating);
+            getData("Country of Release: " + JSON.parse(body).Country);
+            getData("Language of the Movie: " + JSON.parse(body).Language);
+            getData("Movie Plot: " + JSON.parse(body).Plot);
+            getData("Movie Cast: " + JSON.parse(body).Actors + "\n");
         }
     });
 
@@ -98,12 +101,12 @@ function myTweets() {
             console.log('error:', error);
         }
 
-    // Show my last 20 tweets and when they were created
-       
-       for (var i = 0; i < tweets.length; i++) {
-          
-            console.log([i + 1] + '. ' + tweets[i].text);
-            console.log('Created on: ' + tweets[i].created_at + "\n");
+        // Show my last 20 tweets and when they were created
+
+        for (var i = 0; i < tweets.length; i++) {
+
+            getData([i + 1] + '. ' + tweets[i].text);
+            getData('Created on: ' + tweets[i].created_at + "\n");
 
         }
     });
@@ -113,7 +116,7 @@ function myTweets() {
 
 function searchSpotify() {
 
-   // If the user does not type in a song make the default song "The Sign", by Ace of Base 
+    // If the user does not type in a song make the default song "The Sign", by Ace of Base 
 
     if (!userInputTwo) {
         userInputTwo = 'The Sign, Ace of Base';
@@ -126,13 +129,13 @@ function searchSpotify() {
         if (err) {
             return console.log('Error occurred: ', err);
         }
-       
+
         // Show the artist, the song's name, a preview link of the song from spotify, the album that the song is from
-        
-        console.log("Artist:  " + data.tracks.items[0].album.artists[0].name);
-        console.log("Song Name: " + data.tracks.items[0].name);
-        console.log("Preview Link: " + data.tracks.items[0].preview_url);
-        console.log('Album: ' + data.tracks.items[0].album.name);
+
+        getData("Artist: " + data.tracks.items[0].album.artists[0].name);
+        getData("Song Name: " + data.tracks.items[0].name);
+        getData("Preview Link: " + data.tracks.items[0].preview_url);
+        getData("Album: " + data.tracks.items[0].album.name + "\n");
 
 
     });
@@ -143,24 +146,24 @@ function searchSpotify() {
 
 function doWhatItSays() {
 
-// Read from the random.txt file to get the info
+    // Read from the random.txt file to get the info
 
     fs.readFile("random.txt", "utf8", function (err, data) {
         if (err) {
             return console.log(err);
         }
 
-    // Create an array for the data and get the first item 
-       
+        // Create an array for the data and get the first item 
+
         var dataArr = data.split(',');
 
         userInput = dataArr[0];
 
-     // Get the second item in the array   
+        // Get the second item in the array   
 
         userInputTwo = dataArr[1];
 
-    // Call the search spotify function
+        // Call the search spotify function
 
         searchSpotify();
     });
@@ -188,5 +191,15 @@ switch (userInput) {
         break;
 }
 
+// Output the data to a .txt file called log.txt
+// Change all console logs for data to match function name 
+// Console log data as well 
 
-//
+function getData(sendToTextFile) {
+    console.log(sendToTextFile);
+    fs.appendFile("log.txt", sendToTextFile + "\n", function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+}
