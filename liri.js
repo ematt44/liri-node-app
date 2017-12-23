@@ -193,7 +193,7 @@ switch (userInput) {
 
 // Output the data to a .txt file called log.txt
 // Change all console logs for data to match function name 
-// Console log data as well 
+// Console log the data 
 
 function getData(sendToTextFile) {
     console.log(sendToTextFile);
